@@ -1,6 +1,8 @@
 package Tests;
 
 import Base.BaseTest;
+import Help.ElementMethods;
+import Help.PageMethods;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -17,21 +19,27 @@ import java.util.concurrent.TimeUnit;
 
 public class WindowTest extends BaseTest {
 
+    //declaram obiecte specifice interactiunilor pe care vrem sa le facem
+    public PageMethods pageMethods;
+    public ElementMethods elementMethods;
+
     @Test
     public void Windows(){
 
+        pageMethods=new PageMethods(driver);
+        elementMethods=new ElementMethods(driver);
+
         String ExpectedRegisterPageTitle="Register";
-        String ActualRegisterPageTitle=driver.getTitle();
-        Assert.assertEquals("Pagina Register nu are titlu corect",ExpectedRegisterPageTitle,ActualRegisterPageTitle);
+        pageMethods.ValidateTitlePage(ExpectedRegisterPageTitle);
 
         WebElement SwitchtomeniuWeb= driver.findElement(By.xpath("//a[contains(text(),'Switch')]"));
-        Actions Action= new Actions(driver);
-        Action.moveToElement(SwitchtomeniuWeb).build().perform();
+        elementMethods.HoverElement(SwitchtomeniuWeb);
 
         new WebDriverWait(driver,15).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(),'Switch')]")));
         WebElement WindowsSubMeniuWeb= driver.findElement(By.xpath("//a[contains(text(),'Windows')]"));
         WindowsSubMeniuWeb.click();
         driver.navigate().to("http://demo.automationtesting.in/Windows.html");
+        pageMethods.ValidateTitlePage("Frames & windows");
 
         List<WebElement> WindowsOptions=driver.findElements(By.xpath("//ul[@class='nav nav-tabs nav-stacked']/li/a"));
         WindowsOptions.get(0).click();
